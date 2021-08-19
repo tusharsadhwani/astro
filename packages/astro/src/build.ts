@@ -92,17 +92,15 @@ export async function build(astroConfig: AstroConfig, logging: LogOptions = defa
       // TODO: 2x Promise.all? Might be hard to debug + overwhelm resources.
       await Promise.all(
         allRoutesAndPaths.map(async ([route, paths]: [RouteData, string[]]) => {
-          await Promise.all(
-            paths.map((p) =>
-              buildStaticPage({
-                astroConfig,
-                buildState,
-                route,
-                path: p,
-                astroRuntime: runtime,
-              })
-            )
-          );
+          for (const p of paths) {
+            await buildStaticPage({
+              astroConfig,
+              buildState,
+              route,
+              path: p,
+              astroRuntime: runtime,
+            });
+          }
         })
       );
     } catch (e) {
